@@ -55,6 +55,10 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.0")
     
     // Icons
+
+    // BouncyCastle for keystore
+    implementation("org.bouncycastle:bcprov-jdk18on:1.78")
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.78")
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
     
     // DataStore
