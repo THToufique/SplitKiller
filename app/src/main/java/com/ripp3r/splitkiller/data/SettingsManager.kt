@@ -13,19 +13,40 @@ import kotlinx.coroutines.flow.map
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class SettingsManager(private val context: Context) {
+    
     companion object {
-        private val THEME_KEY = stringPreferencesKey("theme")
-        private val SHOW_SYSTEM_APPS_KEY = booleanPreferencesKey("show_system_apps")
+        val THEME_KEY = stringPreferencesKey("theme")
+        val SHOW_SYSTEM_APPS_KEY = booleanPreferencesKey("show_system_apps")
+        val AUTO_MERGE_KEY = booleanPreferencesKey("auto_merge")
     }
-
-    val theme: Flow<String> = context.dataStore.data.map { it[THEME_KEY] ?: "system" }
-    val showSystemApps: Flow<Boolean> = context.dataStore.data.map { it[SHOW_SYSTEM_APPS_KEY] ?: false }
-
+    
+    val themeFlow: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[THEME_KEY] ?: "System"
+    }
+    
+    val showSystemAppsFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[SHOW_SYSTEM_APPS_KEY] ?: false
+    }
+    
+    val autoMergeFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[AUTO_MERGE_KEY] ?: true
+    }
+    
     suspend fun setTheme(theme: String) {
-        context.dataStore.edit { it[THEME_KEY] = theme }
+        context.dataStore.edit { preferences ->
+            preferences[THEME_KEY] = theme
+        }
     }
-
+    
     suspend fun setShowSystemApps(show: Boolean) {
-        context.dataStore.edit { it[SHOW_SYSTEM_APPS_KEY] = show }
+        context.dataStore.edit { preferences ->
+            preferences[SHOW_SYSTEM_APPS_KEY] = show
+        }
+    }
+    
+    suspend fun setAutoMerge(autoMerge: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[AUTO_MERGE_KEY] = autoMerge
+        }
     }
 }

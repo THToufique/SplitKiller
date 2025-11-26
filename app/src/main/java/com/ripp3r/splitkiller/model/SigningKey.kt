@@ -1,7 +1,10 @@
 package com.ripp3r.splitkiller.model
 
 data class SigningKey(
-    val name: String,
+    val id: String,
     val alias: String,
-    val keystorePath: String? = null
+    val createdDate: Long,
+    val validityYears: Int,
+    val organization: String,
+    val isDefaultKey: Boolean = false
 )

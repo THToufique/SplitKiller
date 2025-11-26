@@ -42,7 +42,7 @@ val md_theme_dark_inverseSurface = TextPrimary
 val md_theme_dark_inversePrimary = Color(0xFF825500)
 val md_theme_dark_surfaceTint = AmberPrimary
 
-// Light Theme Colors
+// Light Theme Colors (Optional fallback, but we focus on Dark)
 val md_theme_light_primary = Color(0xFF825500)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_light_primaryContainer = Color(0xFFFFDF9E)

@@ -5,42 +5,66 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-enum class LogLevel { INFO, WARNING, ERROR, SUCCESS }
-enum class LogCategory { MERGE, EXTRACTION }
-
-data class LogEntry(
-    val level: LogLevel,
-    val message: String,
-    val timestamp: Long = System.currentTimeMillis()
-)
-
 object AppLogger {
-    private val _mergeLogs = MutableStateFlow<List<LogEntry>>(emptyList())
-    val mergeLogs: StateFlow<List<LogEntry>> = _mergeLogs.asStateFlow()
-
+    private const val TAG = "SplitKiller"
+    
     private val _extractionLogs = MutableStateFlow<List<LogEntry>>(emptyList())
     val extractionLogs: StateFlow<List<LogEntry>> = _extractionLogs.asStateFlow()
-
-    fun log(category: LogCategory, level: LogLevel, message: String) {
-        val entry = LogEntry(level, message)
+    
+    private val _mergeLogs = MutableStateFlow<List<LogEntry>>(emptyList())
+    val mergeLogs: StateFlow<List<LogEntry>> = _mergeLogs.asStateFlow()
+    
+    fun log(message: String, level: LogLevel = LogLevel.INFO, category: LogCategory = LogCategory.EXTRACTION) {
+        val entry = LogEntry(
+            message = message,
+            level = level,
+            timestamp = System.currentTimeMillis(),
+            category = category
+        )
+        
+        // Add to appropriate log stream
         when (category) {
-            LogCategory.MERGE -> _mergeLogs.value = _mergeLogs.value + entry
-            LogCategory.EXTRACTION -> _extractionLogs.value = _extractionLogs.value + entry
+            LogCategory.EXTRACTION -> {
+                _extractionLogs.value = (_extractionLogs.value + entry).takeLast(100)
+            }
+            LogCategory.MERGE -> {
+                _mergeLogs.value = (_mergeLogs.value + entry).takeLast(100)
+            }
         }
         
-        val tag = "SplitKiller_${category.name}"
         when (level) {
-            LogLevel.INFO -> Log.i(tag, message)
-            LogLevel.WARNING -> Log.w(tag, message)
-            LogLevel.ERROR -> Log.e(tag, message)
-            LogLevel.SUCCESS -> Log.i(tag, "✓ $message")
+            LogLevel.DEBUG -> Log.d(TAG, "[${category.name}] $message")
+            LogLevel.INFO -> Log.i(TAG, "[${category.name}] $message")
+            LogLevel.WARNING -> Log.w(TAG, "[${category.name}] $message")
+            LogLevel.ERROR -> Log.e(TAG, "[${category.name}] $message")
         }
     }
+    
+    fun clearExtraction() {
+        _extractionLogs.value = emptyList()
+    }
+    
+    fun clearMerge() {
+        _mergeLogs.value = emptyList()
+    }
+    
+    fun clearLogs() {
+        _extractionLogs.value = emptyList()
+        _mergeLogs.value = emptyList()
+    }
+}
 
-    fun clearLogs(category: LogCategory) {
-        when (category) {
-            LogCategory.MERGE -> _mergeLogs.value = emptyList()
-            LogCategory.EXTRACTION -> _extractionLogs.value = emptyList()
-        }
-    }
+data class LogEntry(
+    val message: String,
+    val level: LogLevel,
+    val timestamp: Long,
+    val category: LogCategory
+)
+
+enum class LogLevel {
+    DEBUG, INFO, WARNING, ERROR
+}
+
+enum class LogCategory {
+    EXTRACTION, MERGE
 }

@@ -6,7 +6,10 @@ data class AppInfo(
     val packageName: String,
     val appName: String,
     val versionName: String,
-    val icon: Drawable?,
-    val apkPath: String,
-    val isSystemApp: Boolean
+    val versionCode: Int,
+    val installDate: Long,
+    val appSize: Long,
+    val isSystemApp: Boolean,
+    val isSplitApk: Boolean,
+    val icon: Drawable?
 )

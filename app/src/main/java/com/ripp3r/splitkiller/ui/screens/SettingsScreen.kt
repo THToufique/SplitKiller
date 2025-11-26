@@ -1,5 +1,7 @@
 package com.ripp3r.splitkiller.ui.screens
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,8 +27,10 @@ fun SettingsScreen(navController: NavController) {
     val selectedTheme by viewModel.theme.collectAsState()
     val showSystemApps by viewModel.showSystemApps.collectAsState()
     val autoMerge by viewModel.autoMerge.collectAsState()
+    val context = LocalContext.current
     
     var showThemePicker by remember { mutableStateOf(false) }
+    var showAboutDialog by remember { mutableStateOf(false) }
     
     Scaffold(
         topBar = {
@@ -57,7 +62,6 @@ fun SettingsScreen(navController: NavController) {
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // Appearance Section
             SettingsSectionHeader("Appearance")
             
             SettingsCard {
@@ -71,7 +75,6 @@ fun SettingsScreen(navController: NavController) {
                 }
             }
             
-            // APK Operations Section
             SettingsSectionHeader("APK Operations")
             
             SettingsCard {
@@ -96,7 +99,6 @@ fun SettingsScreen(navController: NavController) {
                 }
             }
             
-            // About Section
             SettingsSectionHeader("About")
             
             SettingsCard {
@@ -112,16 +114,15 @@ fun SettingsScreen(navController: NavController) {
                     
                     SettingsItem(
                         icon = Icons.Default.Code,
-                        title = "Developer",
-                        subtitle = "Built with Kotlin & Jetpack Compose",
-                        onClick = { }
+                        title = "About",
+                        subtitle = "App info and links",
+                        onClick = { showAboutDialog = true }
                     )
                 }
             }
         }
     }
     
-    // Theme Picker Dialog
     if (showThemePicker) {
         AlertDialog(
             onDismissRequest = { showThemePicker = false },
@@ -146,6 +147,66 @@ fun SettingsScreen(navController: NavController) {
             confirmButton = {
                 TextButton(onClick = { showThemePicker = false }) {
                     Text("Cancel")
+                }
+            }
+        )
+    }
+    
+    if (showAboutDialog) {
+        AlertDialog(
+            onDismissRequest = { showAboutDialog = false },
+            icon = { Icon(Icons.Default.Info, contentDescription = null) },
+            title = { Text("About SplitKiller") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(
+                        text = "Version 1.0.0",
+                        style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+                    )
+                    Text(
+                        text = "Merge split APKs (XAPK/APKM) into single installable APKs with proper v1+v2+v3 signatures.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    
+                    Spacer(modifier = Modifier.height(8.dp))
+                    
+                    TextButton(
+                        onClick = {
+                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/THToufique/SplitKiller")))
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.Code, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Source Code")
+                    }
+                    
+                    TextButton(
+                        onClick = {
+                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/ripp3rs_hub")))
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.Send, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Telegram Channel")
+                    }
+                    
+                    TextButton(
+                        onClick = {
+                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.youtube.com/@RipperTheModder96")))
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(Icons.Default.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("YouTube Channel")
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showAboutDialog = false }) {
+                    Text("Close")
                 }
             }
         )

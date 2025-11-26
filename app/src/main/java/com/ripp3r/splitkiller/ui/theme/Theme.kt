@@ -78,13 +78,14 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun SplitKillerTheme(
     themePreference: String = "System",
+    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
     val darkTheme = when (themePreference) {
         "Light" -> false
         "Dark" -> true
-        else -> isSystemInDarkTheme()
+        else -> isSystemInDarkTheme() // "System" or default
     }
     
     val colorScheme = when {
@@ -92,6 +93,7 @@ fun SplitKillerTheme(
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
+
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
