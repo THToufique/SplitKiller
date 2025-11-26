@@ -59,7 +59,13 @@ dependencies {
     // BouncyCastle for keystore
 
     // Google apksig library
+
+    // APKEditor for manifest manipulation
+    implementation(files("libs/APKEditor.jar"))
     implementation("com.android.tools.build:apksig:8.7.2")
+
+    // APKEditor for manifest manipulation
+    implementation(files("libs/APKEditor.jar"))
     implementation("org.bouncycastle:bcprov-jdk18on:1.78")
     implementation("org.bouncycastle:bcpkix-jdk18on:1.78")
     implementation("androidx.compose.material:material-icons-extended:1.7.0")
