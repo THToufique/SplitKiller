@@ -1,6 +1,7 @@
 package com.ripp3r.splitkiller.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
@@ -24,7 +25,7 @@ import androidx.navigation.NavController
 import com.ripp3r.splitkiller.model.AppInfo
 import com.ripp3r.splitkiller.viewmodel.ExtractViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun ExtractScreen(navController: NavController) {
     val viewModel: ExtractViewModel = viewModel()
@@ -233,6 +234,7 @@ fun ExtractScreen(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AppCard(
     app: AppInfo,
