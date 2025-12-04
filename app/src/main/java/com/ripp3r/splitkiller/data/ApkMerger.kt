@@ -99,7 +99,7 @@ class ApkMerger(private val context: Context) {
                 keystoreManager.signApk(cleanedApk, defaultKey, SignatureScheme.V1_V2_V3)
             }
             
-            val outputDir = File(Environment.getExternalStorageDirectory(), "SplitKiller")
+            val outputDir = File(uri.path).parentFile ?: File(Environment.getExternalStorageDirectory(), "SplitKiller")
             if (!outputDir.exists()) {
                 outputDir.mkdirs()
             }

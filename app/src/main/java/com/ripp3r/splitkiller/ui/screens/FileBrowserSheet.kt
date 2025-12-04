@@ -28,7 +28,12 @@ fun FileBrowserSheet(
     
     LaunchedEffect(currentPath) {
         files = currentPath.listFiles()
-            ?.filter { it.isDirectory || it.extension in listOf("apk", "xapk", "zip", "apkm") }
+            ?.filter { file ->
+                file.isDirectory || file.name.lowercase().let { name ->
+                    name.endsWith(".apk") || name.endsWith(".xapk") || 
+                    name.endsWith(".zip") || name.endsWith(".apkm") || name.endsWith(".apks")
+                }
+            }
             ?.sortedWith(compareBy({ !it.isDirectory }, { it.name.lowercase() }))
             ?: emptyList()
     }
